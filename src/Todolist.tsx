@@ -2,6 +2,8 @@ import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 import {FilterValuesType} from './App';
 import AddItemForm from "./AddItemForm";
 import EditableSpan from "./EditableSpan";
+import {Button, Checkbox, IconButton} from "@material-ui/core";
+import {Delete} from "@material-ui/icons";
 
 export type TaskType = {
     id: string
@@ -25,42 +27,24 @@ type PropsType = {
 }
 
 export function Todolist(props: PropsType) {
-    /*let [title, setTitle] = useState("")
-    const addTask = () => {
-        props.addTask(title,props.todoListID);
-        setTitle("");
-    }*/
-
-    /* const onChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
-          setTitle(e.currentTarget.value)
-      }*/
-    const onClickremoveTodoList = () => props.removeTodoList(props.todoListID)
-    /* const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-         if (e.charCode === 13) {
-             addTask();
-         }
-     }*/
-
+    const {filter} = props;
+    const onClickremoveTodoList = () => props.removeTodoList(props.todoListID);
     const onAllClickFilter = () => props.changeFilter("all", props.todoListID);
     const onActiveClickHandler = () => props.changeFilter("active", props.todoListID);
     const onCompletedClickHandler = () => props.changeFilter("completed", props.todoListID);
     const addTask = (title: string) => props.addTask(title, props.todoListID)
     const changeTodoListTitle = (title: string) => props.changeTodoListTitle(title, props.todoListID)
-
+    // const taskClasses: string = t.isDone ?
 
     return <div>
         <h3>
         <EditableSpan title={props.title} changeTitle={changeTodoListTitle}/>
-            <button onClick={onClickremoveTodoList}>X</button>
+            <IconButton onClick={onClickremoveTodoList}><Delete/></IconButton>
+            {/*<Button
+                onClick={onClickremoveTodoList}>X</Button>*/}
         </h3>
         <AddItemForm addItem={addTask}/>
-        {/* <div>
-            <input value={title}
-                   onChange={onChangeTitle}
-                   onKeyPress={onKeyPressAddItem}
-            />
-            <button onClick={addTask}>+</button>
-        </div>*/}
+    <ul style={{listStyle: "none",paddingLeft: '0px'}}> </ul>
         <ul>
             {props.tasks.map(t => {
 
@@ -71,21 +55,43 @@ export function Todolist(props: PropsType) {
 
 
                 return <li key={t.id}>
-                    <input type="checkbox"
+                    <Checkbox
+                        color={"primary"}
+                        onChange={changeTaskStatus}
+                        checked={t.isDone}
+                    />
+                    {/*<input type="checkbox"
+                           onChange={changeTaskStatus}
                            checked={t.isDone}
-                           onChange={changeTaskStatus}/>
-                    {/*<span>{t.title}</span>*/}
+
+                          />*/}
 
                     <EditableSpan title={t.title} changeTitle={changeTaskTitle}/>
-                    <button onClick={removeTask}>x</button>
+                    <IconButton
+                        color={"secondary"}
+                        onClick={removeTask}><Delete/></IconButton>
                 </li>
             })
             }
         </ul>
         <div>
-            <button onClick={onAllClickFilter}>All</button>
-            <button onClick={onActiveClickHandler}>Active</button>
-            <button onClick={onCompletedClickHandler}>Completed</button>
+            <Button
+                onClick={onAllClickFilter}
+                color={"primary"}
+                size={"small"}
+                variant={filter === "all" ? "outlined" : "contained"}>All</Button>
+
+            <Button
+                style={{marginLeft: '3px'}}
+                size={"small"}
+                variant={filter === "active" ? "outlined" : "contained"}
+                color={"primary"}
+                onClick={onActiveClickHandler}>Active</Button>
+            <Button
+                size={"small"}
+                variant={filter === "completed" ? "outlined" : "contained"}
+                color={"primary"}
+                onClick={onCompletedClickHandler}>Completed</Button>
         </div>
     </div>
 }
