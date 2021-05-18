@@ -8,7 +8,7 @@ import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography}
 
 
 export type FilterValuesType = "all" | "active" | "completed";
-type TodoListType = {
+export type TodoListType = {
     id: string
     title: string
     filter: FilterValuesType
@@ -47,14 +47,6 @@ function App() {
         setTasks({...tasks})
     }
 
-    function changeFilter(value: FilterValuesType, todoListID: string) {
-        setTodoLists(todoLists.map(tl => tl.id === todoListID ? {...tl, filter: value} : tl))
-    }
-
-    function changeTodoListTitle(title: string, todoListID: string) {
-        setTodoLists(todoLists.map(tl => tl.id === todoListID ? {...tl, title: title} : tl))
-    }
-
     function addTask(title: string, todoListID: string) {
         let task = {id: v1(), title: title, isDone: false};
         let newTask: TaskType = {
@@ -83,16 +75,16 @@ function App() {
 
     }
 
-    function tasksForTodolist(todolist: TodoListType) {
-        switch (todolist.filter) {
-            case "active":
-                return tasks[todolist.id].filter(t => !t.isDone)
-            case "completed":
-                return tasks[todolist.id].filter(t => t.isDone)
-            default:
-                return tasks[todolist.id]
-        }
 
+
+
+// todolists:
+    function changeFilter(value: FilterValuesType, todoListID: string) {
+        setTodoLists(todoLists.map(tl => tl.id === todoListID ? {...tl, filter: value} : tl))
+    }
+
+    function changeTodoListTitle(title: string, todoListID: string) {
+        setTodoLists(todoLists.map(tl => tl.id === todoListID ? {...tl, title: title} : tl))
     }
 
     function removeTodoList(todoListsID: string) {
@@ -105,6 +97,18 @@ function App() {
         const newTodoList: TodoListType = {id: newTodoListID, title: title, filter: "all"}
         setTodoLists([...todoLists, newTodoList])
         setTasks({...tasks, [newTodoListID]: []})
+    }
+
+    function tasksForTodolist(todolist: TodoListType) {
+        switch (todolist.filter) {
+            case "active":
+                return tasks[todolist.id].filter(t => !t.isDone)
+            case "completed":
+                return tasks[todolist.id].filter(t => t.isDone)
+            default:
+                return tasks[todolist.id]
+        }
+
     }
 
     const todoListsComponents = todoLists.map(tl => {
